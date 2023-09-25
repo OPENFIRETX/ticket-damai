@@ -29,29 +29,30 @@ def findElFromList(listClassName, keyClassName, driver):
 
 
 # 从列表中找到要点击的元素
-def findElFromListByKey(listClassName, keyClassName, driver, key):
+def findElFromListByKey(listClassName, keyClassName, driver, handleFn):
+    # 最外层list
     show_list = driver.find_elements(By.CLASS_NAME, listClassName)
-    # print(show_list)
-    show_index = 0
-
+    show_index = -1
+    print("外层list")
+    print(show_list)
     for (index, show) in enumerate(show_list):
-        print("查到的数据")
-        # print(show.getText())
+        # 文字的元素列表
+        texts = show.find_element(By.CLASS_NAME, keyClassName)
+        texts_list = texts.text.split("\n")  # 获取日期时 div里所有文字
+        for (j, text) in enumerate(texts_list):
+            # 自定义判断
+            show_index = handleFn(text, index, show_index)
+            print("WWWWW", show_index)
 
-        test = show.find_elements(By.CLASS_NAME, "day-item")
-        print(test[0].find_elements(By.TAG_NAME, "div")[0].text)
-        print(test[0].find_elements(By.TAG_NAME, "div")[1].text)
-        print("test")
-
-        # if (show.getText().index(key)):
-        #     show_index = index
-    # if show.text.index("成都"):
-    # print(index)
     # 判断搜到没有
     if show_index == -1:
-        print("没有")
+        print("没有!!!!!!!!!!!!!!!!")
         return
-    my_show = driver.find_elements(By.CLASS_NAME, keyClassName)[show_index]
-    sleep(3)
-    my_show.click()
+    else:
+        print("有!!!!!!!!!!!!!!!!!")
+
+    sleep(1)
+    # 点击找到的日期
+    print(show_list[show_index].text)
+    show_list[show_index].click()
     sleep(5)
